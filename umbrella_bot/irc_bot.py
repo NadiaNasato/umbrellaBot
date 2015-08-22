@@ -34,7 +34,7 @@ class IRCBotSettings(object):
 	def __getattr__(self, attr):
 		try:
 			return self._attrdict[attr]
-		except Keyerror:
+		except KeyError:
 			return super(IRCBotSettings, self).__getattr__(attr)
 
 	def __setattr__(self, attr, val):
@@ -120,23 +120,24 @@ class IRCHandler(object):
 			_resp = []
 
 		elif isinstance(resp, basestring):
-			_resp = [IRCResponse(target, resp)]
+			_resp = [IRCResponse(default_target, resp)]
 
 		elif isinstance(resp, list):
 			_resp = list()
 			for i, r in enumerate(resp):
 				if isinstance(r, basestring):
-					_resp.append(IRCResponse(target, r))
+					_resp.append(IRCResponse(default_target, r))
 
 				elif isinstance(r, IRCResponse):
 					_resp.append(r)
 
 				else:
 					raise Exception("Invalid item in resp at index %s: %s" % (i, r))
-			return _resp
 
 		else:
 			raise Exception("Invalid response returned from handler: %s" % resp)
+
+		return _resp
 
 	def priv_message(self, nick, message):
 		raise NotImplementedError()
